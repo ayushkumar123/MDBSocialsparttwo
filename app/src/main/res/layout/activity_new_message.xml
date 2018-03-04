@@ -5,6 +5,7 @@
     android:id="@+id/activity_new_message"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/common_google_signin_btn_text_dark_default"
     tools:context="com.ayush.mdbsocials.NewMessageActivity">
 
     <ImageView
@@ -19,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:srcCompat="@android:color/holo_blue_bright" />
 
     <EditText
         android:id="@+id/nametext"
@@ -28,10 +29,15 @@
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
         android:ems="10"
+        android:fontFamily="casual"
         android:hint="Enter Name of Event"
         android:inputType="textPersonName"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textColorHint="@android:color/holo_blue_bright"
         android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/datetext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -44,10 +50,15 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
         android:ems="10"
+        android:fontFamily="casual"
         android:hint="Enter Date of Event"
         android:inputType="textPersonName"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textColorHint="@android:color/holo_blue_bright"
         android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/desctext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -61,10 +72,15 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
         android:ems="10"
+        android:fontFamily="casual"
         android:hint="Create Description"
         android:inputType="textPersonName"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textColorHint="@android:color/holo_blue_bright"
         android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/signbut"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -78,7 +94,11 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:fontFamily="casual"
         android:text="Done"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/desctext" />
@@ -90,18 +110,20 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:fontFamily="casual"
         android:text="back"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/desctext" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline2"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="257dp"
-        tools:layout_editor_absoluteX="0dp"
-        app:layout_constraintGuide_percent="0.5029354" />
+        app:layout_constraintGuide_begin="257dp" />
 
 </android.support.constraint.ConstraintLayout>

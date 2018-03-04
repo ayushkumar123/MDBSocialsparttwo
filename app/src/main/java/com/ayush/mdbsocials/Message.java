@@ -1,15 +1,17 @@
 package com.ayush.mdbsocials;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    String message;
-    String name, description, date, email;
-    Object timestamp;
+    private String message;
+    final String name;
+    private final String description;
+    final String date;
+    final String email;
+    private Object timestamp;
     String firebaseImageUrl;
+    String id;
+    int num_interested;
 
 
     public Message() {
@@ -23,7 +25,7 @@ public class Message implements Serializable {
 
     }
 
-    public Message(String name, String description, String email, String date, String firebaseImageUrl) {
+    public Message(String name, String description, String email, String date, String firebaseImageUrl, int num_interested) {
         this.firebaseImageUrl =  firebaseImageUrl;
         this.name = name;
         this.description = description;

@@ -20,30 +20,25 @@ import java.util.ArrayList;
 
 
 public class ListActivity extends AppCompatActivity {
-    final ArrayList<Message> socials = new ArrayList<>();
-    final ListAdapter adapter = new ListAdapter(this, socials);
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/socials");
+    private final ArrayList<Message> socials = new ArrayList<>();
+    private final ListAdapter adapter = new ListAdapter(this, socials);
+    private final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/socials");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        RecyclerView recyclerAdapter = (RecyclerView)findViewById(R.id.recyclerView);
+        RecyclerView recyclerAdapter = findViewById(R.id.recyclerView);
         recyclerAdapter.setLayoutManager(new LinearLayoutManager(this));
-
-
-        //Part 2: implement getList
-        //Question 1: add Firebase Realtime Database to your project
         recyclerAdapter.setAdapter(adapter);
-        //Question 2: initialize the messages based on what is in the database
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 socials.clear();
                 for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
-                    socials.add(dataSnapshot2.getValue(Message.class));
+                    Message m = dataSnapshot2.getValue(Message.class);
+                    m.id = dataSnapshot2.getKey();
+                    socials.add(m);
                 }
                 Log.d("onDataChange",String.valueOf(socials.size()));
                 adapter.notifyDataSetChanged();
@@ -56,7 +51,7 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,11 +59,5 @@ public class ListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        //Question 3: add an event listener for the children of the ref, and make it such that
-        // every time a message is added, it creates a new message, adds it to messages and updates
-        // the UI
-
-        //Next part in NewMessageActivity
     }
 }

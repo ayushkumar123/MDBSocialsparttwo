@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,17 +26,15 @@ import com.google.firebase.storage.UploadTask;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class NewMessageActivity extends AppCompatActivity {
+public class NewMessageActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private StorageReference mStorageRef;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static FirebaseAuth mAuth;
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static FirebaseUser mUser;
 
-    public String eventName;
-    public String eventDate;
-    public String eventDesc;
+    private String eventName;
+    private String eventDate;
+    private String eventDesc;
     DatabaseReference myRef = database.getReference("socials");
 
     private Intent data;
@@ -46,65 +43,20 @@ public class NewMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message);
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                checkName();
-                checkDate();
-                checkDesc();
-                if (checkDesc() && checkDate() && checkName()) {
-                    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-
-
-                    //Question 3: generate a key below to use as a unique identifier for the message, and
-                    // for the image filename
-                    final String key = ref.child("socials").push().getKey();
-                    final StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-10f4e.appspot.com");
-                    StorageReference riversRef = storageRef.child(key + ".png");
-
-
-                    //Question 4: create a StorageReference below (hint: the url you need can be found in
-                    // your console at firebase.google.com
-                    riversRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(NewMessageActivity.this, "Failure", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Message social = new Message(eventName, eventDesc, mUser.getEmail() ,eventDate, taskSnapshot.getDownloadUrl().toString());
-                            ref.child("socials").child(key).setValue(social);
-                        }
-                    });
-
-                    startActivity(new Intent(NewMessageActivity.this, ListActivity.class));
-                }
-
-            }
-        });
-
-        findViewById(R.id.imageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, 1);
-            }
-        });
-
-        mAuth = FirebaseAuth.getInstance();
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        final Button button = findViewById(R.id.button);
+        button.setOnClickListener(this);
+        final ImageView image = findViewById(R.id.imageView);
+        image.setOnClickListener(this);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         final Button backbutton = findViewById(R.id.button2);
-        backbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(NewMessageActivity.this, ListActivity.class));
-            }
-        });
+        backbutton.setOnClickListener(this);
     }
 
+    /**
+     * This function checks if the Name text is filled and if it is, stores the information.
+     */
     private boolean checkName() {
         EditText nameText = findViewById(R.id.nametext);
         if (nameText.getText() == null || nameText.getText().toString().length() == 0) {
@@ -116,6 +68,9 @@ public class NewMessageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function checks if the Date text is filled and if it is, stores the information.
+     */
     private boolean checkDate() {
         EditText dateText = findViewById(R.id.datetext);
         if (dateText.getText() == null || dateText.getText().toString().length() == 0) {
@@ -127,6 +82,9 @@ public class NewMessageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function checks if the Description text is filled and if it is, stores the information.
+     */
     private boolean checkDesc() {
         EditText descText = findViewById(R.id.desctext);
         if (descText.getText() == null || descText.getText().toString().length() == 0) {
@@ -138,6 +96,9 @@ public class NewMessageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function stores the image selected by the user.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -148,8 +109,6 @@ public class NewMessageActivity extends AppCompatActivity {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -158,4 +117,46 @@ public class NewMessageActivity extends AppCompatActivity {
 
 
     }
-}
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.button2:
+                startActivity(new Intent(NewMessageActivity.this, ListActivity.class));
+                break;
+            case R.id.imageView:
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1);
+                break;
+            case R.id.button:
+                checkName();
+                checkDate();
+                checkDesc();
+                if (checkDesc() && checkDate() && checkName()) {
+                    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    final String key = ref.child("socials").push().getKey();
+                    final StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://mdbsocials-10f4e.appspot.com");
+                    StorageReference riversRef = storageRef.child(key + ".png");
+                    riversRef.putFile(data.getData()).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(NewMessageActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Message social = new Message(eventName, eventDesc, mUser.getEmail() ,eventDate, taskSnapshot.getDownloadUrl().toString(), 0);
+                            ref.child("socials").child(key).setValue(social);
+                        }
+                    });
+
+                    startActivity(new Intent(NewMessageActivity.this, ListActivity.class));
+                }
+                break;
+
+            }
+
+        }
+    }
+

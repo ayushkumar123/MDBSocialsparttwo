@@ -18,11 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NewSocial" />
-        <activity android:name=".Signup" />
-        <activity android:name=".Detail" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".ListAdapter" />
-        <activity android:name=".Message" />
         <activity android:name=".NewMessageActivity"></activity>
     </application>
 
