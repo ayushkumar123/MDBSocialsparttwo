@@ -1,7 +1,6 @@
 package com.ayush.mdbsocials;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,25 +17,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static android.content.ContentValues.TAG;
+public class Login extends AppCompatActivity implements View.OnClickListener {
 
-public class Login extends AppCompatActivity {
-
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    static FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //Part 1: Authentication
-        //Question 1: add Firebase Authentication to your project
-        //Question 2: create an instance variable for the FirebaseAuth and initialize it below
-
         mAuth = FirebaseAuth.getInstance();
-
-        //Question 3: create an instance variable to listen for the auth state. Log when the auth state changes
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -47,29 +38,21 @@ public class Login extends AppCompatActivity {
                     // User is signed out
                     Log.d("User signed out", "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
-        //Question 4 in attemptLogin()
-        ((Button) findViewById(R.id.logbut)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attemptLogin();
-            }
-        });
+        Button logBut = findViewById(R.id.logbut);
+        logBut.setOnClickListener(this);
 
-        //Question 5 in attemptSignup()
-        ((Button) findViewById(R.id.signupbut)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attemptSignup();
-            }
-        });
+        Button signupBut = findViewById(R.id.signupbut);
+        signupBut.setOnClickListener(this);
 
-        //Part 2 in ListActivity
+
     }
 
+    /**
+     * This function shows what happens when a user attempts to login and the possible end results
+     */
     private void attemptLogin() {
         String email = ((EditText) findViewById(R.id.logintext)).getText().toString();
         String password = ((EditText) findViewById(R.id.passwordtext)).getText().toString();
@@ -94,6 +77,9 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function shows what happens when a user attempts to sign up and the possible end results
+     */
     private void attemptSignup() {
         String email = ((EditText) findViewById(R.id.logintext)).getText().toString();
         final String password = ((EditText) findViewById(R.id.passwordtext)).getText().toString();
@@ -109,13 +95,22 @@ public class Login extends AppCompatActivity {
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
                             if (!task.isSuccessful() || password.length() < 6) {
-                                Toast.makeText(Login.this, "failed signup, password needs to be 6 characters or greater", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login.this, "failed Sign up, remember, password needs to be 6 characters or greater", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(Login.this, "Signup Successful", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(Login.this, ListActivity.class));
                             }
                         }
                     });
+        }
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.logbut:
+                attemptLogin();
+            case R.id.signupbut:
+                attemptSignup();
         }
     }
 }
